@@ -30,3 +30,13 @@
 *.exe
 *.out
 *.app
+
+# build folders
+build
+.venv
+
+#cmake folders
+CMakeUserPresets.json
+
+# clang folders
+.cache
