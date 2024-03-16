@@ -15,3 +15,12 @@ Base project for cpp projects
    * `--build=missing` - build missing
 `cmake --preset --conan-default`
 `cmake --build --preset --conan-debug`
+
+
+## Packing steps (Release only)
+### Window
+* conan install (as above with release profile)
+* `cmake --preset conan-default`
+   * Can be appended with `-DCMAKE_CONFIGURATION_TYPES=Debug` for Windows VS debug builds
+* `cmake --build --preset conan-release`
+* `cpack --config .\build\CPackConfig.cmake`
