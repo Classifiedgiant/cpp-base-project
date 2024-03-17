@@ -24,9 +24,9 @@ jobs:
       # To add more build types (Release, Debug, RelWithDebInfo, etc.) customize the build_type list.
       matrix:
         #os: [ubuntu-latest, windows-latest]
-        os: [window-latest]
-        build_type: [Release]
-        c_compiler: [gcc, clang, cl]
+        #os: [window-latest]
+        # build_type: [Release]
+        #c_compiler: [gcc, clang, cl] -- ORIGINAL
         include:
           - os: windows-latest
             c_compiler: cl
@@ -37,11 +37,11 @@ jobs:
           # - os: ubuntu-latest
           #   c_compiler: clang
           #   cpp_compiler: clang++
-        exclude:
-          - os: windows-latest
-            c_compiler: gcc
-          - os: windows-latest
-            c_compiler: clang
+        # exclude:
+        #   - os: windows-latest
+        #     c_compiler: gcc
+        #   - os: windows-latest
+        #     c_compiler: clang
           # - os: ubuntu-latest
           #   c_compiler: cl
 
@@ -61,7 +61,7 @@ jobs:
 
     - name: Install Conan Dependencies
       run: >
-        conan install ${{ github.workspace }}--build=missing
+        conan install ${{ github.workspace }} --build=missing
 
     - name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
