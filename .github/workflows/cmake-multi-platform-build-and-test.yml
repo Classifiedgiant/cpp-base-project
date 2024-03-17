@@ -60,7 +60,9 @@ jobs:
         echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
 
     - name: Install Conan Dependencies
+      # Window only config at the moment
       run: >
+        conan profile detect &&
         conan install ${{ github.workspace }} --build=missing
 
     - name: Configure CMake
