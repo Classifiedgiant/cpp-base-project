@@ -94,6 +94,10 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: get curr dir
+        shell: bash
+        run: echo "$(ls -al ${{github.workspace}})"
+
       - name: get MAJOR
         shell: bash
         run: |
