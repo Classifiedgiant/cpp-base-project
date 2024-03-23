@@ -99,24 +99,27 @@ jobs:
       #   run: echo "$(ls -al ${{github.workspace}})"
 
       - name: get MAJOR
+        id: major
         shell: bash
-        run: export MAJOR_VERSION=$(grep -Po "(?<=MAJOR )[0-9]+" ${{github.workspace}}/src/version.txt)
+        run: major_version=$(grep -Po "(?<=MAJOR )[0-9]+" ${{github.workspace}}/src/version.txt)
 
       - name: get MINOR
+        id: minor
         shell: bash
-        run: export MINOR_VERSION=$(grep -Po "(?<=MINOR )[0-9]+" ${{github.workspace}}/src/version.txt)
+        run: minor_version=$(grep -Po "(?<=MINOR )[0-9]+" ${{github.workspace}}/src/version.txt)
 
       - name: get PATCH
+        id: patch
         shell: bash
-        run: export PATCH_VERSION=$(grep -Po "(?<=PATCH )[0-9]+" ${{github.workspace}}/src/version.txt)
+        run: patch_version=$(grep -Po "(?<=PATCH )[0-9]+" ${{github.workspace}}/src/version.txt)
 
       - name: Increase Tag
         if: ${{ success() && github.event.inputs.bump-tag }}
         run: >
-          git tag v${{env.MAJOR_VERSION}}.${{env.MINOR_VERSION}}.${{env.PATCH_VERSION}} && git push origin --tags
+          git tag v${{steps.major.outputs.major_version}}.${{steps.major.outputs.minor_version}}.${{steps.major.outputs.patch_version}} && git push origin --tags
 
       - name: Write tag to file
         run: >
-          echo "MAJOR ${{env.MAJOR_VERSION}}\nMINOR ${{env.MINOR_VERSION}}\nPATCH ${{env.PATCH_VERSION}}\n" >>
+          echo "MAJOR ${{steps.major.outputs.major_version}}\nMINOR ${{steps.major.outputs.minor_version}}\nPATCH ${{steps.major.outputs.patch_version}}\n" >>
           ${{github.workspace}}/src/version.txt
 
