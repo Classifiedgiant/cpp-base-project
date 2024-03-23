@@ -92,9 +92,11 @@ jobs:
     runs-on: ubuntu-latest
     needs: build-and-test
     steps:
+      - uses: actions/checkout@v3
+
       - name: get MAJOR
         run: |
-          major_version="$(grep -Eo '(?<=MAJOR) [0-9]*' ${{github.workspace}}/src/version.txt)"
+          MAJOR_VERSION="$(grep -Eo '(?<=MAJOR) [0-9]*' ${{github.workspace}}/src/version.txt)"
       - name: get MINOR
         run: |
           grep -Eo '(?<=MINOR) [0-9]*' src/version.txt >> "$GITHUB_MINOR_VERSION"
