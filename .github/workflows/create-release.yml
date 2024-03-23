@@ -58,7 +58,6 @@ jobs:
           git add ${{github.workspace}}/src/version.txt
           git commit -m "Bump ${{ github.event.inputs.bump_version }} version"
           git push
-          echo "NEW_VERSION=${{steps.sem-ver.outputs.version_tag}}" >> "$GITHUB_ENV"
 
       - name: tag version
         if: ${{ github.event.inputs.bump_tag }}
