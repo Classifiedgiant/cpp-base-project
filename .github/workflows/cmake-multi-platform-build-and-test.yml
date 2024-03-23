@@ -94,7 +94,7 @@ jobs:
     steps:
       - name: get MAJOR
         run: |
-          grep -Eo '(?<=MAJOR) [0-9]*' src/version.txt >> "$GITHUB_MAJOR_VERSION"
+          grep -Eo '(?<=MAJOR) [0-9]*' ${{github.workspace}}/src/version.txt >> "$GITHUB_MAJOR_VERSION"
       - name: get MINOR
         run: |
           grep -Eo '(?<=MINOR) [0-9]*' src/version.txt >> "$GITHUB_MINOR_VERSION"
@@ -107,5 +107,5 @@ jobs:
           git tag v${{env.GITHUB_MAJOR_VERSION}}.${{env.GITHUB_MINOR_VERSION}}.${{env.GITHUB_PATCH_VERSION}} && git push origin --tags
       - name: Write tag to file
         run: >
-          echo "MAJOR ${{env.GITHUB_MAJOR_VERSION}}\nMINOR${{env.GITHUB_MINOR_VERSION}}\n${{env.GITHUB_PATCH_VERSION}}\n" >> ${{github.workspace}}src/version.txt
+          echo "MAJOR ${{env.GITHUB_MAJOR_VERSION}}\nMINOR${{env.GITHUB_MINOR_VERSION}}\n${{env.GITHUB_PATCH_VERSION}}\n" >> ${{github.workspace}}/src/version.txt
 
