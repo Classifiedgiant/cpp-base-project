@@ -51,7 +51,7 @@ jobs:
       - name: push file to git
         run: |
           git config user.email "Repo@Auto.update"
-          git config user.name "Repo Auto Upate"
+          git config user.name "Repo Auto Update"
           git add ${{github.workspace}}/src/version.txt
           git commit -m "Bump ${{ github.event.inputs.bump_version }} version"
           git push
@@ -61,8 +61,8 @@ jobs:
 
   create-packages:
     uses: ./.github/workflows/cmake-multi-platform-build-and-test.yml
-    needs: call-build-and-test
-    if: ${{ success() && inputs.create_deployment }}
+    needs: tag-deployment
+    if: ${{ always() && !(failure() || cancelled()) && inputs.create_deployment}}
     with:
       create_package: true
 
