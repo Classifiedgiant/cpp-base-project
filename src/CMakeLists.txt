@@ -4,12 +4,10 @@ set(VERSION_FILE_NAME version.txt)
 
 # get versions from file
 file (READ ${VERSION_FILE_NAME} FILE_VERSION)
-string(REGEX MATCH "MAJOR ([0-9]*)" _ ${FILE_VERSION})
+string(REGEX MATCH "v([0-9]+)\.([0-9]+).([0-9]+)" _ ${FILE_VERSION})
 set(APP_MAJOR_VERSION ${CMAKE_MATCH_1})
-string(REGEX MATCH "MINOR ([0-9]*)" _ ${FILE_VERSION})
-set(APP_MINOR_VERSION ${CMAKE_MATCH_1})
-string(REGEX MATCH "PATCH ([0-9]*)" _ ${FILE_VERSION})
-set(APP_PATCH_VERSION ${CMAKE_MATCH_1})
+set(APP_MINOR_VERSION ${CMAKE_MATCH_2})
+set(APP_PATCH_VERSION ${CMAKE_MATCH_3})
 
 # if (NOT ${UPDATE_VERSION} STREQUAL "")
 #     message("Update Version...")

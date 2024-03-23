@@ -3,25 +3,17 @@
 name: CMake on multiple platforms
 
 on:
+  workflow_call:
+    inputs:
+      create_package:
+        required: true
+        type: boolean
+        default: false
   push:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
-  workflow_dispatch:
-    inputs:
-      bump_tag:
-        type: boolean
-        description: bump git tag
-        required: false
-        default: false
-      bump_version:
-        type: choice
-        description: Type of git tag bump
-        required: true
-        options:
-        - 'patch'
-        - 'minor'
-        - 'major'
+
 
 jobs:
 
@@ -61,29 +53,6 @@ jobs:
     - name: Build
       run: cmake --build --preset conan-release
 
-  tag-deployment:
-    runs-on: ubuntu-latest
-    needs: build-and-test
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth : 0 # required for tags
-
-      - uses: zwaldowski/semver-release-action@v4
-        if: ${{ github.event.inputs.bump_tag }}
-        id: sem-ver
-        with:
-          dry_run: true
-          bump: ${{ github.event.inputs.bump_version }}
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          prefix: "v"
-
-      - name: tag version
-        if: ${{ github.event.inputs.bump_tag }}
-        run: git tag ${{ steps.sem-ver.outputs.version_tag }} && git push origin --tags
-
-      # - name: Write tag to file
-      #   run: >
-      #     echo "MAJOR ${{steps.major.outputs.major_version}}\nMINOR ${{steps.major.outputs.minor_version}}\nPATCH ${{steps.major.outputs.patch_version}}\n" >>
-      #     ${{github.workspace}}/src/version.txt
-
+    - name: create_packaage
+      if: ${{ success() && github.event.inputs.create_package }}
+      run: cpack --config ${{github.workspace}}\build\CPackConfig.cmake
