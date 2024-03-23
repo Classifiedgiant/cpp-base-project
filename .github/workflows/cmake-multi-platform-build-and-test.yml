@@ -69,18 +69,18 @@ jobs:
         with:
           fetch-depth : 0 # required for tags
 
-      - uses: zwaldowski/semver-release-action@v3
+      - uses: zwaldowski/semver-release-action@v4
         if: ${{ github.event.inputs.bump_tag }}
         id: sem-ver
         with:
-          dry_run: false
+          dry_run: true
           bump: ${{ github.event.inputs.bump_version }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
+          prefix: "v"
 
       - name: tag version
         if: ${{ github.event.inputs.bump_tag }}
-        run: git tag v${{ steps.sem-ver.outputs.version_tag }} && git push origin --tags
-
+        run: git tag ${{ steps.sem-ver.outputs.version_tag }} && git push origin --tags
 
       # - name: Write tag to file
       #   run: >
