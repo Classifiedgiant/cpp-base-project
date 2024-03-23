@@ -9,12 +9,12 @@ on:
     branches: [ "main" ]
   workflow_dispatch:
     inputs:
-      bump-tag:
+      bump_tag:
         type: boolean
         description: bump git tag
         required: false
         default: false
-      bump-version:
+      bump_version:
         type: choice
         description: Type of git tag bump
         required: true
@@ -31,13 +31,6 @@ jobs:
     strategy:
       # Set fail-fast to false to ensure that feedback is delivered for all matrix combinations. Consider changing this to true when your workflow is stable.
       fail-fast: false
-
-      # Set up a matrix to run the following 3 configurations:
-      # 1. <Windows, Release, latest MSVC compiler toolchain on the default runner image, default generator>
-      # 2. <Linux, Release, latest GCC compiler toolchain on the default runner image, default generator>
-      # 3. <Linux, Release, latest Clang compiler toolchain on the default runner image, default generator>
-      #
-      # To add more build types (Release, Debug, RelWithDebInfo, etc.) customize the build_type list.
       matrix:
         # Original values
         #os: [ubuntu-latest, windows-latest]
@@ -47,19 +40,6 @@ jobs:
           - os: windows-latest
             c_compiler: cl
             cpp_compiler: cl
-          # - os: ubuntu-latest
-          #   c_compiler: gcc
-          #   cpp_compiler: g++
-          # - os: ubuntu-latest
-          #   c_compiler: clang
-          #   cpp_compiler: clang++
-        # exclude:
-        #   - os: windows-latest
-        #     c_compiler: gcc
-        #   - os: windows-latest
-        #     c_compiler: clang
-          # - os: ubuntu-latest
-          #   c_compiler: cl
 
     steps:
     - uses: actions/checkout@v3
@@ -67,13 +47,6 @@ jobs:
     - name: Install Conan
       id: conan
       uses: turtlebrowser/get-conan@main
-
-    # - name: Set reusable strings
-    #   # Turn repeated input strings (such as the build output directory) into step outputs. These step outputs can be used throughout the workflow file.
-    #   id: strings
-    #   shell: bash
-    #   run: |
-    #     echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
 
     - name: Install Conan Dependencies
       # Window only config at the moment
@@ -93,33 +66,24 @@ jobs:
     needs: build-and-test
     steps:
       - uses: actions/checkout@v3
+        with:
+          fetch-depth : 0 # required for tags
 
-      # - name: get curr dir
-      #   shell: bash
-      #   run: echo "$(ls -al ${{github.workspace}})"
+      - uses: zwaldowski/semver-release-action@v4
+        if: ${{ github.event.inputs.bump_tag }}
+        id: sem-ver
+        with:
+          dry_run: false
+          bump: ${{ github.event.inputs.bump_version }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: get MAJOR
-        id: major
-        shell: bash
-        run: major_version=$(grep -Po "(?<=MAJOR )[0-9]+" ${{github.workspace}}/src/version.txt) && echo "$(major_version)"
+      - name: tag version
+        if: ${{ github.event.inputs.bump_version }}
+        run: git tag v${{ steps.sem-ver.outputs.version_tag }} && git push origin --tags
 
-      - name: get MINOR
-        id: minor
-        shell: bash
-        run: minor_version=$(grep -Po "(?<=MINOR )[0-9]+" ${{github.workspace}}/src/version.txt) && echo "$(minor_version)"
 
-      - name: get PATCH
-        id: patch
-        shell: bash
-        run: patch_version=$(grep -Po "(?<=PATCH )[0-9]+" ${{github.workspace}}/src/version.txt) && echo "$(patch_version)"
-
-      - name: Increase Tag
-        if: ${{ success() && github.event.inputs.bump-tag }}
-        run: >
-          git tag v${{steps.major.outputs.major_version}}.${{steps.major.outputs.minor_version}}.${{steps.major.outputs.patch_version}} && git push origin --tags
-
-      - name: Write tag to file
-        run: >
-          echo "MAJOR ${{steps.major.outputs.major_version}}\nMINOR ${{steps.major.outputs.minor_version}}\nPATCH ${{steps.major.outputs.patch_version}}\n" >>
-          ${{github.workspace}}/src/version.txt
+      # - name: Write tag to file
+      #   run: >
+      #     echo "MAJOR ${{steps.major.outputs.major_version}}\nMINOR ${{steps.major.outputs.minor_version}}\nPATCH ${{steps.major.outputs.patch_version}}\n" >>
+      #     ${{github.workspace}}/src/version.txt
 
