@@ -31,7 +31,7 @@ jobs:
   tag-deployment:
     runs-on: ubuntu-latest
     needs: call-build-and-test
-    if: ${{ github.event.inputs.bump_tag }}
+    if: ${{ inputs.bump_tag }}
     steps:
       - uses: actions/checkout@v3
         with:
@@ -41,7 +41,7 @@ jobs:
         id: sem-ver
         with:
           dry_run: true
-          bump: ${{ github.event.inputs.bump_version }}
+          bump: ${{ inputs.bump_version }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
           prefix: "v"
       
@@ -62,7 +62,7 @@ jobs:
   create-packages:
     needs: tag-deployment
     uses: ./.github/workflows/cmake-multi-platform-build-and-test.yml
-    if: ${{ github.event.inputs.create_deployment }}
+    if: ${{ inputs.create_deployment }}
     with:
       create_package: true
 
