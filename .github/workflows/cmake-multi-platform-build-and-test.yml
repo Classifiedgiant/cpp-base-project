@@ -101,17 +101,17 @@ jobs:
       - name: get MAJOR
         id: major
         shell: bash
-        run: major_version=$(grep -Po "(?<=MAJOR )[0-9]+" ${{github.workspace}}/src/version.txt)
+        run: major_version=$(grep -Po "(?<=MAJOR )[0-9]+" ${{github.workspace}}/src/version.txt) && echo "$(major_version)"
 
       - name: get MINOR
         id: minor
         shell: bash
-        run: minor_version=$(grep -Po "(?<=MINOR )[0-9]+" ${{github.workspace}}/src/version.txt)
+        run: minor_version=$(grep -Po "(?<=MINOR )[0-9]+" ${{github.workspace}}/src/version.txt) && echo "$(minor_version)"
 
       - name: get PATCH
         id: patch
         shell: bash
-        run: patch_version=$(grep -Po "(?<=PATCH )[0-9]+" ${{github.workspace}}/src/version.txt)
+        run: patch_version=$(grep -Po "(?<=PATCH )[0-9]+" ${{github.workspace}}/src/version.txt) && echo "$(patch_version)"
 
       - name: Increase Tag
         if: ${{ success() && github.event.inputs.bump-tag }}
