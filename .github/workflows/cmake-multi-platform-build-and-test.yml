@@ -94,7 +94,7 @@ jobs:
     steps:
       - name: get MAJOR
         run: |
-          grep -Eo '(?<=MAJOR) [0-9]*' ${{github.workspace}}/src/version.txt >> "$GITHUB_MAJOR_VERSION"
+          major_version="$(grep -Eo '(?<=MAJOR) [0-9]*' ${{github.workspace}}/src/version.txt)"
       - name: get MINOR
         run: |
           grep -Eo '(?<=MINOR) [0-9]*' src/version.txt >> "$GITHUB_MINOR_VERSION"
