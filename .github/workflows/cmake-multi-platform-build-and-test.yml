@@ -35,8 +35,9 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-      with:
-        ref: ${{ github.head_ref }}
+
+    - name: Checkout latest
+      run: git pull --tags
 
     - name: Install Conan
       id: conan
