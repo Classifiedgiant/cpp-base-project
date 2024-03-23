@@ -46,7 +46,7 @@ jobs:
           prefix: "v"
       
       - name: Write tag to fie
-        run: echo "${{steps.sem-ver.outputs.version_tag}}" >> ${{github.workspace}}/src/version.txt
+        run: echo "${{steps.sem-ver.outputs.version_tag}}" > ${{github.workspace}}/src/version.txt
 
       - name: push file to git
         run: |

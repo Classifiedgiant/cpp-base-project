@@ -54,5 +54,5 @@ jobs:
       run: cmake --build --preset conan-release
 
     - name: create_packaage
-      if: ${{ success() && github.event.inputs.create_package }}
+      if: ${{ success() && inputs.create_package }}
       run: cpack --config ${{github.workspace}}\build\CPackConfig.cmake

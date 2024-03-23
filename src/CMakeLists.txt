@@ -9,22 +9,6 @@ set(APP_MAJOR_VERSION ${CMAKE_MATCH_1})
 set(APP_MINOR_VERSION ${CMAKE_MATCH_2})
 set(APP_PATCH_VERSION ${CMAKE_MATCH_3})
 
-# if (NOT ${UPDATE_VERSION} STREQUAL "")
-#     message("Update Version...")
-#     if (${UPDATE_VERSION} STREQUAL "MAJOR")
-#         MATH(EXPR APP_MAJOR_VERSION "${APP_MAJOR_VERSION}+1")
-#     elseif (${UPDATE_VERSION} STREQUAL "MINOR")
-#         MATH(EXPR APP_MINOR_VERSION "${APP_MINOR_VERSION}+1")
-#     elseif (${UPDATE_VERSION} STREQUAL "PATCH")
-#         MATH(EXPR APP_PATCH_VERSION "${APP_PATCH_VERSION}+1")
-#     else()
-#         message (FATAL_ERROR "${UPDATE_VERSION} is an unknown option")
-#     endif()
-
-#     file(WRITE ${VERSION_FILE_NAME} "MAJOR ${APP_MAJOR_VERSION}\nMINOR ${APP_MINOR_VERSION}\nPATCH ${APP_PATCH_VERSION}")
-#     message("Version Updated")
-# endif()
-
 project(${PROJECT_NAME} VERSION ${APP_MAJOR_VERSION}.${APP_MINOR_VERSION}.${APP_PATCH_VERSION} LANGUAGES CXX)
 
 message ("Version ${main_target_VERSION}")
