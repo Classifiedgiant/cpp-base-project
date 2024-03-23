@@ -42,7 +42,6 @@ jobs:
           fetch-depth : 0 # required for tags
 
       - uses: zwaldowski/semver-release-action@v4
-        if: ${{ github.event.inputs.bump_tag }}
         id: sem-ver
         with:
           dry_run: true
@@ -60,7 +59,6 @@ jobs:
           git push
 
       - name: tag version
-        if: ${{ github.event.inputs.bump_tag }}
         run: git tag ${{ steps.sem-ver.outputs.version_tag }} && git push origin --tags
 
   create-packages:
