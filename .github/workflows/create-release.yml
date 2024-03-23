@@ -31,7 +31,6 @@ jobs:
     uses: ./.github/workflows/cmake-multi-platform-build-and-test.yml
     with:
       create_package: false
-      version: "v0.0.0"
 
   tag-deployment:
     runs-on: ubuntu-latest
@@ -70,5 +69,4 @@ jobs:
     if: ${{ github.event.inputs.create_deployment }}
     with:
       create_package: true
-      version: ${{github.env.NEW_VERSION}}
 
