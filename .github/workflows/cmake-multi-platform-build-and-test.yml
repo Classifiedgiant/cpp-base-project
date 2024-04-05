@@ -56,6 +56,13 @@ jobs:
     - name: Build
       run: cmake --build --preset conan-release
 
-    - name: create_packaage
+    - name: Create Package
       if: ${{ success() && inputs.create_package }}
       run: cpack --config ${{github.workspace}}\build\CPackConfig.cmake
+
+    - uses: ncipollo/release-action@v1
+      name: Upload Package
+      if: ${{ success() && inputs.create_package }}
+      with:
+        artifacts: "${{ github.workspace }}/*.zip"
+        body: "Testing where this appears"
