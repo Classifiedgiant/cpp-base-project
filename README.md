@@ -1,3 +1,5 @@
+![Main Branch](https://github.com/Classifiedgiant/cpp-base-project/actions/workflows/cmake-multi-platform-build-and-test.yml/badge.svg)
+
 # cpp-base-project
 
 Base project for cpp projects. This project uses [conan](https://conan.io/center) for it dependency packages and provides customisable build pipelines from within the `.conan` folder.
