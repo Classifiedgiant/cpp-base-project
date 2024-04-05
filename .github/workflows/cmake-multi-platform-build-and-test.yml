@@ -71,4 +71,4 @@ jobs:
         artifacts: "${{ github.workspace }}/*.zip"
         body: "Testing where this appears"
         tag: ${{ inputs.package_tag }}
-        replaceArtifacts: true
+        replacesArtifacts: true
