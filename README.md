@@ -1,4 +1,8 @@
 ![Main Branch](https://github.com/Classifiedgiant/cpp-base-project/actions/workflows/cmake-multi-platform-build-and-test.yml/badge.svg)
+![Main Branch](https://github.com/Classifiedgiant/cpp-base-project/actions/workflows/bump-version.yml/badge.svg)
+![Main Branch](https://github.com/Classifiedgiant/cpp-base-project/actions/workflows/create-release.yml/badge.svg)
+
+
 
 # cpp-base-project
 
