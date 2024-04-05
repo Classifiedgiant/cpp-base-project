@@ -8,7 +8,11 @@ on:
       create_package:
         required: true
         type: boolean
-        default: false
+      package_tag:
+        required: false
+        type: string
+        default: "not_set"
+
   push:
     branches: [ "main" ]
   pull_request:
@@ -66,3 +70,5 @@ jobs:
       with:
         artifacts: "${{ github.workspace }}/*.zip"
         body: "Testing where this appears"
+        tag: ${{ inputs.package_tag }}
+        replaceArtifacts: true

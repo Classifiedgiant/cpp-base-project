@@ -1,67 +1,17 @@
-name: Create Releases
+name: Create Release
 
 on:
   workflow_dispatch:
     inputs:
-      bump_tag:
-        type: boolean
-        description: bump git tag
-        required: false
-        default: false
-      bump_version:
-        type: choice
-        description: Type of git tag bump
+      package_tag:
+        type: string
         required: true
-        options:
-        - 'patch'
-        - 'minor'
-        - 'major'
-      create_deployment:
-        type: boolean
-        description: create deployments
-        required: false
-        default: false
 
 jobs:
-  call-build-and-test:
-    uses: ./.github/workflows/cmake-multi-platform-build-and-test.yml
-    with:
-      create_package: false
-
-  tag-deployment:
-    runs-on: ubuntu-latest
-    needs: call-build-and-test
-    if: ${{ success() && inputs.bump_tag }}
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth : 0 # required for tags
-
-      - uses: zwaldowski/semver-release-action@v4
-        id: sem-ver
-        with:
-          dry_run: true
-          bump: ${{ inputs.bump_version }}
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          prefix: "v"
-      
-      - name: Write tag to fie
-        run: echo "${{steps.sem-ver.outputs.version_tag}}" > ${{github.workspace}}/src/version.txt
-
-      - name: push file to git
-        run: |
-          git config user.email "Repo@Auto.update"
-          git config user.name "Repo Auto Update"
-          git add ${{github.workspace}}/src/version.txt
-          git commit -m "Bump ${{ github.event.inputs.bump_version }} version"
-          git push
-
-      - name: tag version
-        run: git tag ${{ steps.sem-ver.outputs.version_tag }} && git push origin --tags
-
   create-packages:
-    uses: ./.github/workflows/cmake-multi-platform-build-and-test.yml
-    needs: tag-deployment
-    if: ${{ always() && !(failure() || cancelled()) && inputs.create_deployment}}
-    with:
-      create_package: true
+      uses: ./.github/workflows/cmake-multi-platform-build-and-test.yml
+      permissions:
+        contents: write
+      with:
+        create_package: true
+        package_tag: ${{ github.event.inputs.package_tag }}

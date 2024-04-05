@@ -1,0 +1,50 @@
+name: Bump Tag
+
+on:
+  workflow_dispatch:
+    inputs:
+      bump_version:
+        type: choice
+        description: Type of git tag bump
+        required: true
+        options:
+        - 'patch'
+        - 'minor'
+        - 'major'
+
+jobs:
+  call-build-and-test:
+    uses: ./.github/workflows/cmake-multi-platform-build-and-test.yml
+    with:
+      create_package: false
+
+  tag-deployment:
+    runs-on: ubuntu-latest
+    needs: call-build-and-test
+    if: ${{ success() }}
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth : 0 # required for tags
+
+      - uses: zwaldowski/semver-release-action@v4
+        id: sem-ver
+        with:
+          dry_run: true
+          bump: ${{ inputs.bump_version }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          prefix: "v"
+      
+      - name: Write tag to fie
+        run: echo "${{steps.sem-ver.outputs.version_tag}}" > ${{github.workspace}}/src/version.txt
+
+      - name: push file to git
+        run: |
+          git config user.email "Repo@Auto.update"
+          git config user.name "Repo Auto Update"
+          git add ${{github.workspace}}/src/version.txt
+          git commit -m "Bump ${{ github.event.inputs.bump_version }} version"
+          git push
+
+      - name: tag version
+        run: git tag ${{ steps.sem-ver.outputs.version_tag }} && git push origin --tags
