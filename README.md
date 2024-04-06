@@ -27,6 +27,7 @@ I have also included my personal .vscode settings for users that require them. P
    * `-pr .\.conan\window_msvc_debug` - Select profile to use for building
    * `--build=missing` - build missing
 `cmake --preset --conan-default`
+`cmake --preset conan-release` -- mac
 `cmake --build --preset --conan-debug`
 
 
