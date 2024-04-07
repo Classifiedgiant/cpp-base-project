@@ -83,7 +83,7 @@ jobs:
         path: "${{github.workspace}}/*.zip"
         if-no-files-found: error
 
-    - name: Upload Artifact For Windows
+    - name: Upload Artifact For Macos
       if: ${{ success() && matrix.os == 'macos-latest' && inputs.create_package }}
       uses: actions/upload-artifact@v4
       with:
