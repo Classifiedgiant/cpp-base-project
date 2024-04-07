@@ -39,12 +39,6 @@ jobs:
             c_compiler: clang
 
     steps:
-    # - name: Build and Test Windows
-    #   uses: ./.github/workflows/build-and-test-windows.yml
-    #   if: matrix.os == 'windows-latest'
-    #   with:
-    #     create_package: ${{ github.event.inputs.create_package }}
-    #     package_tag: ${{ github.event.inputs.package_tag }}
     - uses: actions/checkout@v3
 
     - name: Checkout latest
@@ -73,25 +67,36 @@ jobs:
     - name: Build
       run: cmake --build --preset conan-release
 
-    - name: Create Package
-      if: ${{ success() && inputs.create_package }}
+    - name: Create Package For Windows
+      if: ${{ success() && matrix.os == 'windows-latest' && inputs.create_package }}
       run: cpack --config ${{github.workspace}}\build\CPackConfig.cmake
 
-  # package-artifacts:
-  #   runs-on: ubuntu-lastest
-  #   needs: build-and-test
-  #   steps:
-  #     - name: Get Artifacts
-  #       uses: actions/download-artifact@v4
-  #       with:
-  #           name: windows_artifact
+    - name: Create Package For MacOS
+      if: ${{ success() && matrix.os == 'macos-latest' && inputs.create_package }}
+      run: cpack --config ${{github.workspace}}\build\Release\CPackConfig.cmake
 
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: artifact-${{matrix.runs-on}}
+        path: ${{github.workspace}}/*.(zip|tar.gz)
 
-  #     - uses: ncipollo/release-action@v1
-  #       name: Upload Package
-  #       if: ${{ success() && inputs.create_package }}
-  #       with:
-  #         artifacts: "${{ github.workspace }}/*.zip"
-  #         body: "Testing where this appears"
-  #         tag: ${{ inputs.package_tag }}
-  #         replacesArtifacts: true
+  package-artifacts:
+    runs-on: ubuntu-latest
+    needs: build-and-test
+    steps:
+      - name: Get Artifacts
+        uses: actions/download-artifact@v4
+        with:
+            path: artifacts
+            pattern: artifacts-*
+            merge-multiple: true
+
+      - uses: ncipollo/release-action@v1
+        name: Upload Package
+        if: ${{ success() && inputs.create_package }}
+        with:
+          artifacts: "${{ github.workspace }}/artifacts/*.(zip|tar.gz)"
+          body: "Testing where this appears"
+          tag: ${{ inputs.package_tag }}
+          replacesArtifacts: true
