@@ -30,7 +30,7 @@ jobs:
       - uses: ncipollo/release-action@v1
         name: Upload Package
         with:
-          artifacts: "${{ github.workspace }}/artifacts/"
+          artifacts: "${{ github.workspace }}/artifacts/**"
           body: "Testing where this appears"
           tag: ${{ inputs.package_tag }}
           replacesArtifacts: true
