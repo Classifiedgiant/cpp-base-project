@@ -54,7 +54,7 @@ jobs:
         conan profile detect &&
         conan install ${{ github.workspace }} --build=missing
 
-    - name: Configure CMake For Window
+    - name: Configure CMake For Windows
       if: ${{matrix.os == 'windows-latest'}}
       run: >
         cmake --preset conan-default
@@ -76,27 +76,8 @@ jobs:
       run: cpack --config ${{github.workspace}}\build\Release\CPackConfig.cmake
 
     - name: Upload Artifact
+      if: ${{ success() && inputs.create_package }}
       uses: actions/upload-artifact@v4
       with:
         name: artifact-${{matrix.runs-on}}
         path: ${{github.workspace}}/*.(zip|tar.gz)
-
-  package-artifacts:
-    runs-on: ubuntu-latest
-    needs: build-and-test
-    steps:
-      - name: Get Artifacts
-        uses: actions/download-artifact@v4
-        with:
-            path: artifacts
-            pattern: artifacts-*
-            merge-multiple: true
-
-      - uses: ncipollo/release-action@v1
-        name: Upload Package
-        if: ${{ success() && inputs.create_package }}
-        with:
-          artifacts: "${{ github.workspace }}/artifacts/*.(zip|tar.gz)"
-          body: "Testing where this appears"
-          tag: ${{ inputs.package_tag }}
-          replacesArtifacts: true
