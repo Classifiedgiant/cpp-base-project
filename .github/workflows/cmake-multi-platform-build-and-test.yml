@@ -75,10 +75,18 @@ jobs:
       if: ${{ success() && matrix.os == 'macos-latest' && inputs.create_package }}
       run: cpack --config ${{github.workspace}}/build/Release/CPackConfig.cmake
 
-    - name: Upload Artifact
-      if: ${{ success() && inputs.create_package }}
+    - name: Upload Artifact For Windows
+      if: ${{ success() && matrix.os == 'windows-latest' && inputs.create_package }}
       uses: actions/upload-artifact@v4
       with:
         name: artifact-${{matrix.os}}
-        path: "${{github.workspace}}/**.(zip|tar.gz)"
+        path: "${{github.workspace}}/*.zip"
+        if-no-files-found: error
+
+    - name: Upload Artifact For Windows
+      if: ${{ success() && matrix.os == 'macos-latest' && inputs.create_package }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: artifact-${{matrix.os}}
+        path: "${{github.workspace}}/*.tar.gz"
         if-no-files-found: error
