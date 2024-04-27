@@ -26,10 +26,10 @@ set(CPACK_RESOURCE_FILE_README ${CMAKE_SOURCE_DIR}/README.md)
 if(WIN32)
     set(CPACK_GENERATOR "ZIP")  # Specify the generator to create a ZIP package
 elseif(APPLE)
-    set(CPACK_GENERATOR "TGZ")  # Specify the generator to create a ZIP package
+    set(CPACK_GENERATOR "TGZ")  # Specify the generator to create a TGZ package
 elseif (CMAKE_SYSTEM_NAME STREQUAL "Linux")
 
-    message("Apple builds not implemented yet!")
+    message("Linux builds not implemented yet!")
 endif()
 
 include(CPack)
