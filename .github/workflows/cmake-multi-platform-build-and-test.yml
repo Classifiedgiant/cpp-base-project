@@ -47,6 +47,12 @@ jobs:
     - name: Checkout latest
       run: git pull --tags
 
+    - name: Create Venv
+      if: ${{matrix.os == 'macos-12'}}
+      run: >
+        python3 -m venv ${{ github.workspace }}/.venv
+        source ${{ github.workspace }}.venv/bin/activate
+
     - name: Install Conan
       id: conan
       uses: turtlebrowser/get-conan@main
