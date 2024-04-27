@@ -35,7 +35,10 @@ jobs:
           - os: windows-latest
             c_compiler: cl
             cpp_compiler: cl
-          - os: macos-latest
+
+            # Mac-14 doesn't currently work with turtlebrowser/get-conan.
+            # Therefore we'll pin this for the moment
+          - os: macos-12
             c_compiler: clang
 
     steps:
@@ -60,7 +63,7 @@ jobs:
         cmake --preset conan-default
 
     - name: Configure CMake For MacOS
-      if: ${{matrix.os == 'macos-latest'}}
+      if: ${{matrix.os == 'macos-12'}}
       run: >
         cmake --preset conan-release
 
@@ -72,7 +75,7 @@ jobs:
       run: cpack --config ${{github.workspace}}\build\CPackConfig.cmake
 
     - name: Create Package For MacOS
-      if: ${{ success() && matrix.os == 'macos-latest' && inputs.create_package }}
+      if: ${{ success() && matrix.os == 'macos-12' && inputs.create_package }}
       run: cpack --config ${{github.workspace}}/build/Release/CPackConfig.cmake
 
     - name: Upload Artifact For Windows
@@ -84,7 +87,7 @@ jobs:
         if-no-files-found: error
 
     - name: Upload Artifact For Macos
-      if: ${{ success() && matrix.os == 'macos-latest' && inputs.create_package }}
+      if: ${{ success() && matrix.os == 'macos-12' && inputs.create_package }}
       uses: actions/upload-artifact@v4
       with:
         name: artifact-${{matrix.os}}
