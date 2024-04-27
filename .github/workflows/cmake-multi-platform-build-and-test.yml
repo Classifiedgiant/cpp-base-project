@@ -36,9 +36,7 @@ jobs:
             c_compiler: cl
             cpp_compiler: cl
 
-            # Mac-14 doesn't currently work with turtlebrowser/get-conan.
-            # Therefore we'll pin this for the moment
-          - os: macos-12
+          - os: macos-latest
             c_compiler: clang
 
     steps:
@@ -48,10 +46,10 @@ jobs:
       run: git pull --tags
 
     - name: Create Venv
-      if: ${{matrix.os == 'macos-12'}}
+      if: ${{matrix.os == 'macos-latest'}}
       run: >
-        python3 -m venv ${{ github.workspace }}/.venv
-        source ${{ github.workspace }}.venv/bin/activate
+        python3 -m venv ${{ github.workspace }}/.venv &&
+        source ${{ github.workspace }}/.venv/bin/activate
 
     - name: Install Conan
       id: conan
@@ -69,7 +67,7 @@ jobs:
         cmake --preset conan-default
 
     - name: Configure CMake For MacOS
-      if: ${{matrix.os == 'macos-12'}}
+      if: ${{matrix.os == 'macos-latest'}}
       run: >
         cmake --preset conan-release
 
@@ -81,7 +79,7 @@ jobs:
       run: cpack --config ${{github.workspace}}\build\CPackConfig.cmake
 
     - name: Create Package For MacOS
-      if: ${{ success() && matrix.os == 'macos-12' && inputs.create_package }}
+      if: ${{ success() && matrix.os == 'macos-latest' && inputs.create_package }}
       run: cpack --config ${{github.workspace}}/build/Release/CPackConfig.cmake
 
     - name: Upload Artifact For Windows
@@ -93,7 +91,7 @@ jobs:
         if-no-files-found: error
 
     - name: Upload Artifact For Macos
-      if: ${{ success() && matrix.os == 'macos-12' && inputs.create_package }}
+      if: ${{ success() && matrix.os == 'macos-latest' && inputs.create_package }}
       uses: actions/upload-artifact@v4
       with:
         name: artifact-${{matrix.os}}
