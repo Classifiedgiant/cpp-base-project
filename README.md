@@ -28,7 +28,7 @@ I have also included my personal .vscode settings for users that require them. P
    * `--build=missing` - build missing
 `cmake --preset --conan-default`
 `cmake --preset conan-release` -- mac
-`cmake --build --preset --conan-debug`
+`cmake --build --preset conan-(debug|release)` - for mac
 
 
 ## Packing steps (Release only)
