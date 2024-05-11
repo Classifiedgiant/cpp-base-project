@@ -1,8 +1,0 @@
-{
-    "editor.formatOnSave": true,
-    "C_Cpp.codeAnalysis.clangTidy.enabled": true,
-    "C_Cpp.clang_format_sortIncludes": true,
-    "[cpp]": {
-        "editor.defaultFormatter": "ms-vscode.cpptools",
-    }
-}
