@@ -18,7 +18,6 @@ on:
   pull_request:
     branches: [ "main" ]
 
-
 jobs:
   build-and-test:
     runs-on: ${{ matrix.os }}
@@ -41,9 +40,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-
-    - name: Checkout latest
-      run: git pull --tags
+      with:
+        fetch-tags: true
 
     - name: Install Conan for Mac
       if: ${{matrix.os == 'macos-latest'}}
